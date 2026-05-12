@@ -82,6 +82,24 @@ pkb-x extract
 
 If your shell cannot find `pkb-x`, run the same commands as `python -m pkb_x.cli ...` from the activated environment.
 
+## Incremental Runs
+
+Extraction is incremental by default. Each run still asks X for the current bookmark pages so it can discover new bookmarks, but bookmark IDs already archived as `complete` are skipped when their Markdown file still exists. Linked pages already archived as `complete` are also skipped when their metadata file still exists.
+
+Use `--refresh` to re-fetch and rewrite already archived bookmarks, threads, and linked pages:
+
+```bash
+pkb-x extract --refresh
+```
+
+Use `--refresh-links` when you only want to re-fetch outbound linked pages without forcing every linked bookmark page to refresh all link-independent state. Bookmark Markdown may still be rewritten because it includes linked-page metadata:
+
+```bash
+pkb-x extract --refresh-links
+```
+
+During a full run, bookmarks that were previously seen but are no longer returned by X are marked `missing` in `data/.state/extractor.sqlite`; their existing files are left in place. `--max-pages` runs do not mark missing bookmarks because they only inspect a subset of the archive.
+
 ## Thread Extraction
 
 By default the extractor uses X full-archive search:

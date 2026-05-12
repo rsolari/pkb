@@ -32,7 +32,8 @@ def is_external_url(url: str) -> bool:
     if parsed.scheme not in {"http", "https"}:
         return False
     host = (parsed.hostname or "").lower()
-    return not (host.endswith("x.com") or host.endswith("twitter.com") or host in {"t.co"})
+    x_hosts = ("x.com", "twitter.com", "t.co")
+    return not any(host == domain or host.endswith(f".{domain}") for domain in x_hosts)
 
 
 def extract_urls_from_post(post: dict) -> list[str]:
@@ -113,6 +114,7 @@ def fetch_page(url: str, timeout: float = 20.0) -> ExtractedPage:
                 error=f"Unsupported content type: {content_type}",
             )
         title, canonical, text = extract_main_text(body)
+        error = f"HTTP {response.status_code}" if response.is_error else None
         return ExtractedPage(
             url=url,
             final_url=str(response.url),
@@ -122,6 +124,7 @@ def fetch_page(url: str, timeout: float = 20.0) -> ExtractedPage:
             text=text,
             status_code=response.status_code,
             raw_html=body,
+            error=error,
         )
     except Exception as exc:  # noqa: BLE001
         return ExtractedPage(
@@ -134,4 +137,3 @@ def fetch_page(url: str, timeout: float = 20.0) -> ExtractedPage:
             status_code=0,
             error=str(exc),
         )
-

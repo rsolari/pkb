@@ -22,7 +22,12 @@ def cmd_extract(args: argparse.Namespace) -> int:
     settings = load_settings()
     extractor = Extractor(settings)
     try:
-        stats = extractor.run(max_pages=args.max_pages, fetch_links=not args.no_links)
+        stats = extractor.run(
+            max_pages=args.max_pages,
+            fetch_links=not args.no_links,
+            refresh=args.refresh,
+            refresh_links=args.refresh_links,
+        )
     finally:
         extractor.close()
     print("Extraction complete")
@@ -56,6 +61,16 @@ def build_parser() -> argparse.ArgumentParser:
     extract_parser = subparsers.add_parser("extract", help="Fetch bookmarks, threads, linked pages, and Markdown files.")
     extract_parser.add_argument("--max-pages", type=int, default=None, help="Limit bookmark API pages for testing.")
     extract_parser.add_argument("--no-links", action="store_true", help="Skip outbound page fetching.")
+    extract_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Re-fetch and rewrite already archived bookmarks, threads, and linked pages.",
+    )
+    extract_parser.add_argument(
+        "--refresh-links",
+        action="store_true",
+        help="Re-fetch linked pages even when their metadata is already archived.",
+    )
     extract_parser.set_defaults(func=cmd_extract)
 
     return parser
@@ -76,4 +91,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
