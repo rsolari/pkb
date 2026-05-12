@@ -47,6 +47,10 @@ class Settings:
     def state_path(self) -> Path:
         return self.data_dir / ".state" / "extractor.sqlite"
 
+    @property
+    def search_index_path(self) -> Path:
+        return self.data_dir / ".state" / "search.sqlite"
+
 
 def load_settings() -> Settings:
     load_dotenv()
