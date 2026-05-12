@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - extract-x-bookmarks
 
 permissions:
   contents: read
