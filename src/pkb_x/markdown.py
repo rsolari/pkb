@@ -78,6 +78,8 @@ def flatten_thread_payload(thread_payload: dict[str, Any], fallback_post: dict[s
     for page in pages:
         for post in page.get("data", []) or []:
             posts[post["id"]] = post
+        for post in page.get("includes", {}).get("tweets", []) or []:
+            posts[post["id"]] = post
         users.update(users_by_id(page))
     sorted_posts = sorted(posts.values(), key=lambda item: item.get("created_at", ""))
     if not sorted_posts:
@@ -147,4 +149,3 @@ def render_page_markdown(page: ExtractedPage) -> str:
 def page_output_path(base_dir: Path, page: ExtractedPage) -> Path:
     host = re.sub(r"[^a-zA-Z0-9.-]+", "-", page.final_url.split("/")[2]) if "://" in page.final_url else "unknown-host"
     return base_dir / "linked-pages" / host / f"{stable_slug(page.final_url)}.md"
-

@@ -55,9 +55,20 @@ class Extractor:
                     self.state.mark_bookmark_seen(post_id, run_started_at)
                     try:
                         bookmark_path = bookmark_output_path(self.settings.markdown_dir, post)
-                        if self.state.should_skip_bookmark(post_id, bookmark_path.exists(), refresh or refresh_links):
+                        if self.state.should_skip_bookmark(post_id, bookmark_path.exists(), refresh):
                             stats["skipped_bookmarks"] += 1
-                            self.state.mark(post_id, "bookmark", "skipped", "already archived")
+                            if refresh_links:
+                                linked_pages = self._fetch_links(
+                                    post,
+                                    fetch_links_enabled=fetch_links,
+                                    refresh=True,
+                                    seen_at=run_started_at,
+                                    stats=stats,
+                                )
+                                stats["links"] += len(linked_pages)
+                                self.state.mark(post_id, "bookmark", "skipped", "bookmark preserved; links refreshed")
+                            else:
+                                self.state.mark(post_id, "bookmark", "skipped", "already archived")
                             continue
                         thread_payload, thread_error = self._fetch_thread(api, post, payload)
                         if not thread_error:
@@ -93,9 +104,15 @@ class Extractor:
             return thread_payload, None
         except httpx.HTTPStatusError as exc:
             detail = f"{exc.response.status_code}: {exc.response.text[:500]}"
-            fallback = {"pages": [{"data": [post], "includes": payload.get("includes", {}), "meta": {"result_count": 1}}]}
-            write_json(raw_path, {"error": detail, "fallback": fallback})
-            return fallback, detail
+            return self._thread_fallback(post, payload, raw_path, detail)
+        except httpx.HTTPError as exc:
+            detail = f"{type(exc).__name__}: {exc}"
+            return self._thread_fallback(post, payload, raw_path, detail)
+
+    def _thread_fallback(self, post: dict, payload: dict, raw_path: Path, detail: str) -> tuple[dict, str]:
+        fallback = {"pages": [{"data": [post], "includes": payload.get("includes", {}), "meta": {"result_count": 1}}]}
+        write_json(raw_path, {"error": detail, "fallback": fallback})
+        return fallback, detail
 
     def _fetch_links(
         self,
