@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pkb-x"
+version = "0.1.0"
+description = "Local-first extractor for X/Twitter bookmarks, threads, and linked pages."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "beautifulsoup4>=4.12.3",
+  "httpx>=0.27.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.3",
+]
+
+[project.scripts]
+pkb-x = "pkb_x.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
