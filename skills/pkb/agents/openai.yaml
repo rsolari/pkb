@@ -1,0 +1,4 @@
+interface:
+  display_name: "PKB"
+  short_description: "Search and refresh local pkb context"
+  default_prompt: "Use $pkb to find relevant knowledge-base context for this task."
