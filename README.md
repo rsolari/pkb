@@ -90,6 +90,18 @@ If your shell cannot find `pkb`, run the same commands as `python -m pkb.cli ...
 
 `pkb` does not run as a background service. It is a local CLI that an agent can call when it needs context.
 
+Install the bundled Codex skill so agents know when and how to use the CLI:
+
+```bash
+npx skills add . --skill pkb
+```
+
+After this repository is available from GitHub, you can also install the skill directly from the repo:
+
+```bash
+npx skills add https://github.com/rsolari/pkb --skill pkb
+```
+
 There are two separate workflows:
 
 1. Owner setup and refresh:
