@@ -86,6 +86,42 @@ pkb extract
 
 If your shell cannot find `pkb`, run the same commands as `python -m pkb.cli ...` from the activated environment.
 
+## Using `pkb` With an Agent
+
+`pkb` does not run as a background service. It is a local CLI that an agent can call when it needs context.
+
+There are two separate workflows:
+
+1. Owner setup and refresh:
+
+   ```bash
+   pkb init
+   pkb auth
+   pkb extract
+   ```
+
+   `pkb auth` briefly starts a local OAuth callback listener at `http://127.0.0.1:8765/callback`. After the browser-based authorization finishes, the token is saved at `data/.secrets/x-token.json`; no daemon needs to keep running.
+
+2. Agent discovery:
+
+   ```bash
+   pkb search "swiftui performance" --limit 10
+   pkb browse --kind bookmark --limit 20
+   pkb browse --kind linked-page --random --limit 10
+   ```
+
+   Search and browse only need local filesystem access to the configured `PKB_DATA_DIR` and its search index at `data/.state/search.sqlite`. They do not need X API access unless the agent is also expected to run `pkb extract`.
+
+If you want an agent to use `pkb` reliably, make sure its environment can find the CLI and the same data directory:
+
+```bash
+source .venv/bin/activate
+export PKB_DATA_DIR=data
+pkb search "your query"
+```
+
+The agent-readable Markdown files live under `data/markdown/`, so an agent can also read those files directly after using `pkb search` or `pkb browse` to find relevant paths.
+
 ## Incremental Runs
 
 Extraction is incremental by default. Each run still asks X for the current bookmark pages so it can discover new bookmarks, but bookmark IDs already archived as `complete` are skipped when their Markdown file still exists. Linked pages already archived as `complete` are also skipped when their metadata file still exists.
