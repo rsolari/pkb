@@ -1,6 +1,10 @@
 # Personal Knowledge Base
 
-This workspace contains a local-first personal knowledge base. The first source extractor archives X/Twitter bookmarks: it fetches bookmarks through the official X API, attempts to reconstruct the author's thread, follows outbound links, and writes both raw JSON/HTML and readable Markdown files.
+This workspace contains a local-first personal knowledge base called `pkb`. `pkb` ingests data like text, pdfs blogs posts. Then it serves that data to LLMs.
+
+`pkb` is designed to turn good ideas from your social feeds into context for your agents. For example, if you like/bookmark posts about app dev, `pkb` can import them. Then, your agent will be able to see all those ideas. You can ask your agent to review the backlog for suggestions about how to improve your app dev process.
+
+The first source extractor archives X/Twitter bookmarks: it fetches bookmarks through the official X API, attempts to reconstruct the author's thread, follows outbound links, and writes both raw JSON/HTML and readable Markdown files.
 
 ## What It Produces
 
