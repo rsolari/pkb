@@ -1,6 +1,6 @@
-# Personal Knowledge Base: X Bookmark Extractor
+# Personal Knowledge Base
 
-This workspace contains a local-first extractor for X/Twitter bookmarks. It fetches your bookmarks through the official X API, attempts to reconstruct the author's thread, follows outbound links, and writes both raw JSON/HTML and readable Markdown files.
+This workspace contains a local-first personal knowledge base. The first source extractor archives X/Twitter bookmarks: it fetches bookmarks through the official X API, attempts to reconstruct the author's thread, follows outbound links, and writes both raw JSON/HTML and readable Markdown files.
 
 ## What It Produces
 
@@ -59,28 +59,28 @@ python -m pip install -e ".[dev]"
 Initialize runtime directories:
 
 ```bash
-pkb-x init
+pkb init
 ```
 
 Authorize with X:
 
 ```bash
-pkb-x auth
+pkb auth
 ```
 
 Run a small smoke extraction:
 
 ```bash
-pkb-x extract --max-pages 1 --no-links
+pkb extract --max-pages 1 --no-links
 ```
 
 Run the full extraction:
 
 ```bash
-pkb-x extract
+pkb extract
 ```
 
-If your shell cannot find `pkb-x`, run the same commands as `python -m pkb_x.cli ...` from the activated environment.
+If your shell cannot find `pkb`, run the same commands as `python -m pkb.cli ...` from the activated environment.
 
 ## Incremental Runs
 
@@ -89,13 +89,13 @@ Extraction is incremental by default. Each run still asks X for the current book
 Use `--refresh` to re-fetch and rewrite already archived bookmarks, threads, and linked pages:
 
 ```bash
-pkb-x extract --refresh
+pkb extract --refresh
 ```
 
 Use `--refresh-links` when you only want to re-fetch outbound linked pages without forcing every linked bookmark page to refresh all link-independent state. Bookmark Markdown may still be rewritten because it includes linked-page metadata:
 
 ```bash
-pkb-x extract --refresh-links
+pkb extract --refresh-links
 ```
 
 During a full run, bookmarks that were previously seen but are no longer returned by X are marked `missing` in `data/.state/extractor.sqlite`; their existing files are left in place. `--max-pages` runs do not mark missing bookmarks because they only inspect a subset of the archive.

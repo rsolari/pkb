@@ -2,7 +2,7 @@ import socket
 
 import httpx
 
-from pkb_x.pages import extract_main_text, extract_urls_from_post, fetch_page, is_external_url, is_public_destination
+from pkb.pages import extract_main_text, extract_urls_from_post, fetch_page, is_external_url, is_public_destination
 
 
 def test_url_filtering_skips_x_and_tco():

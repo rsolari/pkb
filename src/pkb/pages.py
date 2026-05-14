@@ -157,7 +157,7 @@ def _read_limited_response(response: httpx.Response, max_bytes: int) -> tuple[by
 
 def fetch_page(url: str, timeout: float = 20.0, max_bytes: int = MAX_RESPONSE_BYTES) -> ExtractedPage:
     headers = {
-        "User-Agent": "pkb-x/0.1 (+local personal archive)",
+        "User-Agent": "pkb/0.1 (+local personal archive)",
         "Accept": "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8",
     }
     current_url = url

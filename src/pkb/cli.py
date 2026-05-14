@@ -106,7 +106,7 @@ def cmd_init(_: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="pkb-x", description="Extract X bookmarks into a local knowledge-base archive.")
+    parser = argparse.ArgumentParser(prog="pkb", description="Manage a local personal knowledge-base archive.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     init_parser = subparsers.add_parser("init", help="Create local data directories.")
