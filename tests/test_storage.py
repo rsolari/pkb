@@ -1,4 +1,4 @@
-from pkb_x.storage import StateStore
+from pkb.storage import StateStore
 
 
 def test_bookmark_skip_requires_complete_status_existing_file_and_no_refresh(tmp_path):

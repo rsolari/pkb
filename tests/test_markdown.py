@@ -1,4 +1,4 @@
-from pkb_x.markdown import render_bookmark_markdown
+from pkb.markdown import render_bookmark_markdown
 
 
 def test_render_bookmark_markdown_uses_note_tweet_and_frontmatter():

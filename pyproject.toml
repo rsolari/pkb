@@ -3,9 +3,9 @@ requires = ["hatchling>=1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pkb-x"
+name = "pkb"
 version = "0.1.0"
-description = "Local-first extractor for X/Twitter bookmarks, threads, and linked pages."
+description = "Local-first personal knowledge base archive with source extractors and search."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -20,8 +20,7 @@ dev = [
 ]
 
 [project.scripts]
-pkb-x = "pkb_x.cli:main"
+pkb = "pkb.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-

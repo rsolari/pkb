@@ -1,11 +1,11 @@
 import httpx
 
-from pkb_x import extractor as extractor_module
-from pkb_x.config import Settings
-from pkb_x.extractor import Extractor
-from pkb_x.markdown import bookmark_output_path
-from pkb_x.pages import ExtractedPage
-from pkb_x.storage import StateStore, ensure_dirs
+from pkb import extractor as extractor_module
+from pkb.config import Settings
+from pkb.extractor import Extractor
+from pkb.markdown import bookmark_output_path
+from pkb.pages import ExtractedPage
+from pkb.storage import StateStore, ensure_dirs
 
 
 def test_thread_network_failure_uses_fallback_and_writes_raw_error(tmp_path):

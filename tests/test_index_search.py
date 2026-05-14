@@ -2,10 +2,10 @@ import hashlib
 import json
 import sqlite3
 
-from pkb_x import cli
-from pkb_x.config import Settings
-from pkb_x.index import IndexStats, initialize, parse_markdown, reindex
-from pkb_x.search import browse, search
+from pkb import cli
+from pkb.config import Settings
+from pkb.index import IndexStats, initialize, parse_markdown, reindex
+from pkb.search import browse, search
 
 
 def test_initialize_creates_schema_and_migrates_body_column(tmp_path):
