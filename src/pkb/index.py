@@ -172,6 +172,8 @@ def _iter_markdown_documents(markdown_dir: Path) -> list[MarkdownDocument]:
         if not root.exists():
             continue
         for path in sorted(root.rglob("*.md")):
+            if not path.is_file():
+                continue
             documents.append(_load_markdown_document(markdown_dir, path, kind))
     return documents
 

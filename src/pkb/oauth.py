@@ -124,6 +124,17 @@ def load_token(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_configured_token(settings: Settings) -> dict[str, Any]:
+    if settings.env_token:
+        return dict(settings.env_token)
+    if not settings.token_path.exists():
+        raise ValueError(
+            f"No OAuth token found. Run `pkb auth` to create {settings.token_path}, "
+            "or set X_TOKEN_JSON or X_ACCESS_TOKEN in .env."
+        )
+    return load_token(settings.token_path)
+
+
 def token_is_expired(token: dict[str, Any], skew_seconds: int = 120) -> bool:
     expires_in = int(token.get("expires_in", 0) or 0)
     obtained_at = int(token.get("obtained_at", 0) or 0)
@@ -160,7 +171,7 @@ def authenticate(settings: Settings, open_browser: bool = True) -> dict[str, Any
 
 
 def get_valid_token(settings: Settings) -> dict[str, Any]:
-    token = load_token(settings.token_path)
+    token = load_configured_token(settings)
     if token_is_expired(token) and token.get("refresh_token"):
         refreshed = refresh_token(settings, token["refresh_token"])
         if "refresh_token" not in refreshed:

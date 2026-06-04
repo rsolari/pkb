@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import os
+import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 
 DEFAULT_SCOPES = ("tweet.read", "users.read", "bookmark.read", "offline.access")
@@ -27,6 +29,7 @@ class Settings:
     client_secret: str | None
     redirect_uri: str
     data_dir: Path
+    env_token: dict[str, Any] | None = None
     scopes: tuple[str, ...] = DEFAULT_SCOPES
     thread_search: str = "all"
     link_timeout_seconds: float = 20.0
@@ -66,5 +69,37 @@ def load_settings() -> Settings:
         client_secret=client_secret,
         redirect_uri=redirect_uri,
         data_dir=data_dir,
+        env_token=_load_env_token(),
         thread_search=thread_search,
     )
+
+
+def _load_env_token() -> dict[str, Any] | None:
+    token_json = os.environ.get("X_TOKEN_JSON", "").strip()
+    if token_json:
+        token = json.loads(token_json)
+        if not isinstance(token, dict):
+            raise ValueError("X_TOKEN_JSON must be a JSON object")
+        return token
+
+    access_token = os.environ.get("X_ACCESS_TOKEN", "").strip() or os.environ.get("X_BEARER_TOKEN", "").strip()
+    if not access_token:
+        return None
+
+    token: dict[str, Any] = {
+        "access_token": access_token,
+        "token_type": os.environ.get("X_TOKEN_TYPE", "bearer").strip() or "bearer",
+    }
+    refresh_token = os.environ.get("X_REFRESH_TOKEN", "").strip()
+    if refresh_token:
+        token["refresh_token"] = refresh_token
+    scope = os.environ.get("X_TOKEN_SCOPE", "").strip()
+    if scope:
+        token["scope"] = scope
+    expires_in = os.environ.get("X_EXPIRES_IN", "").strip()
+    if expires_in:
+        token["expires_in"] = int(expires_in)
+    obtained_at = os.environ.get("X_TOKEN_OBTAINED_AT", "").strip()
+    if obtained_at:
+        token["obtained_at"] = int(obtained_at)
+    return token
