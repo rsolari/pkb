@@ -50,6 +50,11 @@ data/
 
    If your X app is configured as a confidential client, also set `X_CLIENT_SECRET`.
 
+   If you already have OAuth token secrets, you can also put them in `.env` instead of
+   `data/.secrets/x-token.json`. Use `X_TOKEN_JSON` for the full OAuth token response,
+   or set `X_ACCESS_TOKEN` and optionally `X_REFRESH_TOKEN`, `X_EXPIRES_IN`, and
+   `X_TOKEN_OBTAINED_AT`.
+
 ## Install
 
 ```bash
@@ -112,7 +117,7 @@ There are two separate workflows:
    pkb extract
    ```
 
-   `pkb auth` briefly starts a local OAuth callback listener at `http://127.0.0.1:8765/callback`. After the browser-based authorization finishes, the token is saved at `data/.secrets/x-token.json`; no daemon needs to keep running.
+   `pkb auth` briefly starts a local OAuth callback listener at `http://127.0.0.1:8765/callback`. After the browser-based authorization finishes, the token is saved at `data/.secrets/x-token.json`; no daemon needs to keep running. If `.env` contains `X_TOKEN_JSON` or `X_ACCESS_TOKEN`, extraction can use that token directly; refreshed tokens are written to `data/.secrets/x-token.json`.
 
 2. Agent discovery:
 

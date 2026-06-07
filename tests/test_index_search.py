@@ -122,6 +122,26 @@ def test_reindex_indexes_bookmark_and_linked_page_rows(tmp_path):
     assert linked_page.exists()
 
 
+def test_reindex_ignores_markdown_named_directories(tmp_path):
+    settings = _settings(tmp_path)
+    _write_linked_page(
+        settings,
+        "jeffreys-skills.md",
+        "https---jeffreys-skills-md-8a60d8366c9d",
+        url="https://jeffreys-skills.md/",
+        title="Jeffrey's Skills",
+        body="# Jeffrey's Skills\n\nDirectory name ends with .md.\n",
+    )
+
+    stats = reindex(settings)
+
+    assert stats.scanned == 1
+    assert stats.indexed == 1
+    assert [hit.path for hit in browse(settings, kind="linked-page")] == [
+        "linked-pages/jeffreys-skills.md/https---jeffreys-skills-md-8a60d8366c9d.md"
+    ]
+
+
 def test_reindex_skips_unchanged_full_reindexes_and_removes_deleted_files(tmp_path):
     settings = _settings(tmp_path)
     bookmark = _write_bookmark(
